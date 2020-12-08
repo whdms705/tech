@@ -14,7 +14,7 @@
 * [샤딩](#샤딩)
 * [Replication](#Replication)
 * [파티셔닝](#파티셔닝)
-
+* [mybatis_캐시](#mybatis_캐시)
 
 
 ---
