@@ -15,7 +15,8 @@
 * [Replication](#Replication)
 * [파티셔닝](#파티셔닝)
 * [mybatis_캐시](#mybatis_캐시)
-
+* [데이터베이스 락](#락)
+* [clustered Index/Nonclustered Index](#clustered_Index)
 
 ---
 
@@ -305,6 +306,9 @@ NOSQL에서 테이블과 같은 개념으로 컬렉션이라는 형태로 데이
 -----------------------------------------------------------------------
 
 ### 샤딩
+>> 데이터가 많아서 검색이 느린데 더 빠르게 할 수 있는 방법은 없을까?
+
+
 * 샤딩은 수평 분할(Horizontal Partitioning)과 동일하며, 인덱스의 크기를 줄이고, 작업 동시성을 늘리기 위한 것이다.
 
 * 수평 분할(Horizontal Partitioning)이란 스키마(schema)가 같은 데이터를 두 개 이상의 테이블에 나누어 저장하는 디자인을 말한다. 
@@ -490,3 +494,100 @@ REORGANIZE PARTITION p2,p3
 ```
  
 >> 파티션을 P2 , P3으로 만들었지만 데이터가 적어서 P23으로 병합하는 경우
+
+
+
+### mybatis_캐시
+
+#### Local cache
+* MyBatis에는 Local cache라는게 있는데 이녀석은 끌 수없고 항상 활성화
+* SESSION과 STATEMENT라는 설정 범위를 갖고있고 SESSION이 기본값
+* STATEMENT와 SESSION의 차이는 캐시데이터의 생존범위
+
+따로 설정이 없다면 기본설정인 SESSION과 범위로 되어 있습니다.
+범위를  STATEMENT로 변경하고 싶다면!
+
+spring boot 사용시(application.properties)
+```properties
+
+# mybatis local cache
+mybatis.configuration.local-cache-scope=statement
+
+```
+
+`SESSION`
+
+SESSION을 적용했을때 cache의 정보의 생존범위는 session이 유지되는 순간까지 이다.<br>
+즉 Transaction이 끝나거나(commit이나 rollback) 아니면 insert, update, delete 가 실행되면<br>
+Local cache가 보유하고 있던 cache 정보는 폐기된다.
+
+
+`STATEMENT`
+
+mapper에 정의된 액션(<select> .. ,</select>  <update> ..</update>) 하나까지 유지<br>
+사실상 cache를 거의 사용하지 않는 것과 같은 효과이다.
+
+```xml
+
+<select id="selectStationName" resultType="String">
+   select
+     stationName
+    from tblStation
+    order by seq asc
+</select>
+
+```
+
+#### Second level cache
+* Second level cache 는 Local cache 와는 다르게 비활성화 활성화가 가능
+
+Second level cache를 활성화 하고 싶다면
+
+```properties
+
+# mybatis second level cache
+mybatis.configuration.cache-enabled=true
+
+```
+
+mapper.xml에서 설정을 해줘야한다.
+
+```xml
+
+<cache 
+    id="LRU" 
+    resultType="300000"
+    size="5"
+    readonly="true"
+/>
+
+```
+* eviction: 캐시 알고리즘 속성으로 기본은 LRU(사용빈도가 낮은것)이고 그 외에 3가지가 있음. FIFO(선입선출).
+* flushInterval: 캐시 유지 설정1분 뒤 캐시 비움.(단, 특정 시각을 정하지는 못함)
+* size: 디폴트 값은 1024이며, 메모리 여부를 확인 후 사용해야 할 듯.
+* readOnly: 캐시 데이터를 읽기만 가능하게 할지 설정. (읽기/쓰기 모두 가능한 경우에는 반환된 캐시 데이터에 대한 변경이 가능하며, 캐시 복사본을 반환한다고 함)
+
+
+
+위에 선언을 해주고 사용할 statement에 <br>
+select 안에 useCache 옵션을 True로 설정해주면 해당 Statement의 결과가 캐시된다.
+
+
+* Second level cache는 Session 범위 밖에서의 캐시사용 여부를 조정한다. 
+* Local cache는 Statement 실행후 Commit이 되면 캐시를 지우는데 반해 Second level cache는 commit을 해도 캐시데이터가 살아있다. 
+
+
+>> mybatis cache는 이와같고 mybatis cache는 잘사용하지 않으며 DAO단의 캐시보단는 ehcache ,redis를 이용한 service단의 캐시를 고려하는게 좋은거 같다.
+
+
+`출처`
+https://jp1020.tistory.com/entry/mybatis-cache-설정
+https://idea-sketch.tistory.com/31?category=547413
+
+### 데이터베이스 락
+
+* optimistic lock
+
+* pessimistic lock
+shared lock : 다른 사용자가 동시에 읽을 수는 있지만 , update ,delete를 방지함
+exclusive lock : 다른 사용자 읽기,수정,삭제 모두를 불가능하게 함
