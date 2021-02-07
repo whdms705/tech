@@ -53,6 +53,34 @@ https://www.kdata.or.kr/info/info_04_view.html?field=&keyword=&type=techreport&p
 그래서 외부연동업체 API호출을 추가 작업 로직중에서 비동기로  분리해되는 것들은 요청으로 처리하여 피드백건을
 해결했습니다.
 
+`기본 사용`<br>
+```java
+
+CompletableFuture.runAsync(task)
+
+```
+
+`스레드 풀 설정 후 사용`<br>
+```java
+Executor executor = Executors.newFixedThreadPool(10);
+
+CompletableFuture.runAsync(task,executor)
+
+```
+* newFixedThreadPool
+    * 처리할 작업이 등록되면 그에 따라 실제 작업할 스레드를 하나씩 생성한다. 생성할 수 있는 쓰레드의 최대 개수는 제한되어 있으며, 제한된 개수까지 쓰레드를 생성한 후 쓰레드를 유지한다. 
+
+* newCachedThreadPool
+    * 캐시 쓰레드풀은 현재 갖고 있는 쓰레드의 수가 처리할 작업의 수보다 많아서 쉬는 쓰레드가 많이 발생할 때 쉬는 쓰레드를 종료시켜 훨씬 유연하게 대응할 수 있다. 처리할 작업의 수가 많아지면 그만큼 쓰레드를 생성한다. 반면에 쓰레드의 수에는 제한을 두지 않는다.
+
+* newSingleThreadExecutor
+    * 단일 쓰레드로 동작하는 Executor 로서 작업을 처리하는 쓰레드가 단 하나뿐이다.
+
+* newScheduledThreadPool
+    * 일정 시간 이후에 실행하거나 주기적으로 작업을 실행할 수 있으며, 쓰레드의 수가 고정되어 있는형태의 Executor.Timer 클래스의 기능과 유사하다. 
+
+
+
 ### 힌트를 사용해서 쿼리 지정해주기
 배치 쿼리중에 성능이 나오지 않는 쿼리가 있어 explain으로 실행계획을 확인하여
 타고 있는 인덱스를 확인해보니 cardinalilty가 높지 않는 A칼럼의 인덱스를 타고 있었고
