@@ -17,6 +17,8 @@
 * [mybatis_캐시](#mybatis_캐시)
 * [데이터베이스 락](#락)
 * [clustered Index/Nonclustered Index](#clustered_Index)
+* [mybatis # $ 차이점](#mybatis)
+* [innoDB myisam 차이점](#innoDB_myisam_차이점)
 
 ---
 
@@ -82,11 +84,11 @@ cf) https://minimax95.tistory.com/entry/%EC%A0%95%EA%B7%9C%ED%99%94Normalization
 
 ### 트랜잭션
 - 여러개의 작업이 발생할때 하나의 단위로 묶어 일괄 실행, 일괄 취소 할수있게 해주는것. 중간에 에러가 발생하면 없던일로 처리할 수 있다. 	
-- 특성 
-> 원자성(모두 실행되던지, 아니면 전혀 실행되지 않던지
-> 일관성(실행전 내용 잘못되어있지 않으면 후에도 잘못되지 않아야한다)
-> 고립성(다른트랜잭션 영향X)
-> 지속성(영구적 저장)
+- 특성 ACID
+> 원자성-Atomicity(모두 실행되던지, 아니면 전혀 실행되지 않던지)
+> 일관성-Consistency(실행전 내용 잘못되어있지 않으면 후에도 잘못되지 않아야한다)
+> 고립성-Isolation(다른트랜잭션 영향X)
+> 지속성-Durability(트랜잭션이 성공적으로 완료되었으면 결과는 영구히 반영되어야 한다.)
 
 ### 트랜잭션 격리 레벨
 #### 트랜잭션 격리 레벨
@@ -600,9 +602,39 @@ https://jp1020.tistory.com/entry/mybatis-cache-설정
 https://idea-sketch.tistory.com/31?category=547413
 
 ### 데이터베이스 락
+`shared lock`<br> 
+* 다른 사용자가 동시에 읽을 수는 있지만 , update ,delete를 방지함
 
-* optimistic lock
+보통 데이터를 읽을 때 사용합니다.<br>
+ 원하는 데이터에 lock을 걸었지만 다른 세션에서 읽을 수 있습니다.<br> 
+ 공유Lock을 설정한 경우 추가로 공유Lock을 설정할 수 있지만, 배타적 Lock은 설정할 수 없습니다.<br> 
+ 즉, 내가 보고 있는 데이터는 다른 사용자가 볼 수 있지만, 변경할 수는 없습니다.<br> 
 
-* pessimistic lock
-shared lock : 다른 사용자가 동시에 읽을 수는 있지만 , update ,delete를 방지함
-exclusive lock : 다른 사용자 읽기,수정,삭제 모두를 불가능하게 함
+`exclusive lock`<br>
+* 다른 사용자 읽기,수정,삭제 모두를 불가능하게 함
+
+보통 데이터를 변경할 때 사용합니다. <br> 
+이름에서 느껴지는 것 처럼 해당 Lock이 해제되기 전까지는, 다른 공유Lock, 배타적Lock을 설정할 수 없습니다.<br> 
+즉, 읽기 기와 쓰기가 불가능하다는 의미입니다.<br> 
+
+`innoDB`<br>
+* Row-level lock
+    * 테이블의 row마다 걸리는 row-level lock이다.
+* Record lock
+    *  DB의 index record에 걸리는 lock이다. 
+    
+c1 = 10에 조건에 해당하는 Record에 걸리는 락
+```sql
+
+(Query 1 in transaction A)
+SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE;
+
+```
+* Gap lock
+    *  Gap lock은 DB index record의 gap에 걸리는 lock이다. 여기서 gap이란 index 중 DB에 실제 record가 없는 부분이다.
+
+
+>> record lock이 이미 존재하는 row가 변경되지 않도록 보호하는 반면,
+>> gap lock은 조건에 해당하는 새로운 row가 추가되는 것을 방지하기 위함이다.
+
+cf ) .https://chrisjune-13837.medium.com/db-lock-%EB%9D%BD%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80-d908296d0279

@@ -37,6 +37,13 @@
 
 * Job과 Step 1:M
 * Step과 ItemReader, ItemProcessor, ItemWriter 1:1
+* Tasklet 하나와 Reader & Processor & Writer 한 묶음이 같은 레벨이다.
+
+![A](imgs/springbatch_step.PNG)
+
+### 청크 지향 프로세싱 프로세스
+
+![A](imgs/batch_chunk.PNG)
 
 #### 용어 정리
 `Job`<br>
@@ -55,3 +62,12 @@
 
 
 https://terasoluna-batch.github.io/guideline/5.0.1.RELEASE/en/Ch02_SpringBatchArchitecture.html#Ch02_SpringBatchArch_Overview
+
+### 처리대상이 많은 데이터를 처리하는 경우 어떻게 처리를 하였는지?
+
+>> 파티셔닝을 사용한 병렬 프로그래밍 방식을 이용하여 처리 속도 개선을 하였습니다.
+
+* partitioner gridSize는 3으로 설정하여 사용
+gridSize가 크다고 무조건 좋은게 아니다.<br>
+스레드를 생성하여 사용하기 때문에 자원과 연결이 되어 있기때문에 실무에서 사용하는 서버에 상황에 맞게 설정하여<br>
+최적화해야 한다.
