@@ -537,7 +537,7 @@ Class.forName("oracle.jdbc.driver.OracleDriver");
 `출처`
 https://blog.naver.com/software705/221369217211
 
-###Wrapper class
+### Wrapper class
 
 기본 자료타입(primitive type)을 객체로 다루기 위해서 사용하는 클래스들을 래퍼 클래스(wrapper class)라고 합니다. 
 
@@ -789,7 +789,7 @@ public class Person {
 - 객체를 클래스의 인스턴스라고도 부른다
 => ‘인스턴스화하여 레퍼런스를 할당한’ 객체를 인스턴스라고 말하지만, 이는 원본(추상적인 개념)으로부터 생성되었다는 것에 의미를 부여하는 것일 뿐 엄격하게 객체와 인스턴스를 나누긴 어렵다.
 
-![A](imgs/object_instance.PNG)  
+![A](imgs/object_instance.png)  
 
 ---------------------------------------
 ### 객체(Object)란 무엇인가
@@ -893,7 +893,7 @@ public class Person {
   > 에러의 예로는 OutOfMemoryError, ThreadDeath, StackOverflowError 등이 있다.
 
 #### CheckedException과 UnCheckedException의 차이
-![A](imgs/error_exception.PNG)  
+![A](imgs/error_exception.png)  
 - Checked Exception : RuntimeException을 상속 X / 예외처리 필수
   Unchecked Exception : RuntimeException을 상속 O / 예외처리 안해도 됨
 - RuntimeException과 이를 상속한 클래스(Unchecked Exception)를 조금 특별하게 취급한다. 명시적으로 예외 처리를 하지 않아도 되기 때문이다.
