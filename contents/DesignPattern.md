@@ -271,7 +271,7 @@ public class SkeletonResponse {
 - Strategy 패턴: 알고리즘을 구성으로 사용.유연성 o
 - Template Method 패턴: 알고리즘을 서브클래스[하위]에서 일부 지정할 수 있으면서 재사용이 가능, 하지만 의존성이 크다는 문제가 발생. 재사용 o
 
->출처 : https://niceman.tistory.com/133
+>출처 : https://niceman.tistory.com/133 , https://victorydntmd.tistory.com/291?category=719467
 
 ##### cf) 캡슐화    
 >- 객체의 필드(속성), 메소드를 하나로 묶고, 실제 구현 내용을 외부에 감추는 것을 말한다.

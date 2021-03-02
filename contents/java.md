@@ -953,6 +953,21 @@ https://okky.kr/article/329818
 특정 동작을 목적으로 추상 메서드를 하나만 담은 인터페이스나 추상 클래스를 함수 객체라합니다.<br>
 
 
+### HashMap vs HashTable vs ConcurrentHashMap의 차이를 설명하시오.
+`HashMap`<br>
+* 동기화(thread-safe) 보장 안됨
+* null 허용
+
+` HashTable  ConcurrentHashMap`<br>
+* 동기화(thread-safe) 보장
+* null 허용하지 않는다.
+* 성능은 ConcurrentHashMap가 더 우수하다.
+>> HashTable  ConcurrentHashMap는 구현방식이 다르다.
+
+cf ) http://egloos.zum.com/Agbird/v/4849046
+
+
+
 ### java immutable Object
 >> 불변객체는 재할당은 가능하지만, 한번 할당하면 내부 데이터를 변경할 수 없는 객체
 

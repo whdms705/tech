@@ -2,9 +2,14 @@
 
 **:Contents**
 * [MessageQueue 장점] 
-* [RabbitMq VS Kafka]
+* [RabbitMq VS Kafka 왜 rabbitmq인지]
 * [RabbitMq 바인딩 방식]
 * [RabbitMq를 실무에 사용하면서 더 고민할 부분]
+* [왜 메세지 시스템을 도입했는지]
+* [재처리 , 재처리 실패시 어떻게 했는지]
+* [프로듀서 실패시 어떻게 처리하는지]
+* [컨슈머 스레드는 몇개로 설정했는지] 
+
 
 ### MessageQueue 장점
 * 애플리케이션/시스템 간의 의존성 분리 front => api 의 구조에서 대령의 요청으로 인해 api서버에 문제가 생긴다면 서비스 전체에 영향을 미친다. 

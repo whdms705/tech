@@ -4,6 +4,7 @@
 * [결합인덱스로 트러블 이슈 해결하기](#트러블이슈해결1)
 * [비동기 처리로 API timeout 케이스 대비하기](#트러블이슈해결2)
 * [힌트를 이용한 인덱스 강제 지정](#sql튜닝)
+* [ehcache 적용을 통해 카테고리 조회 개선](#개선)
 
 ---
 
@@ -99,3 +100,8 @@ SELECT * FROM t USE INDEX(인덱스 명)
 mysql의 경우  group by를 하면 정렬도 같이 해주기 때문에<br>
 explain의 실행계획에 filesort가 같이 찍힌다. <br>
 정렬이 필요 없는 경우라면 `order by null`을 선언해준다면 filesort를 제거 할 수 있다.
+
+
+
+### ehcache 적용을 통해 카테고리 조회 개선
+
